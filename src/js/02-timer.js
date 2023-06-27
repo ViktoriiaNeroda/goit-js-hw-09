@@ -7,22 +7,22 @@ let currentDate = null;
 let intervalId = null;
 
 const calendar = document.querySelector('#datetime-picker');
-const startButton = document.querySelector('[data-start-timer]');
-// startButton.disabled = true;
+const startButton = document.querySelector('[data-start]');
+startButton.disabled = true;
 // const timer = document.querySelector('.timer')
 const TIMER_DELAY = 1000;
 
 flatpickr(calendar, {
     enableTime: true,
     time_24hr: true,
-    defaultDate: 'today',
+    defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDate) {
         if (selectedDate[0].getTime() < Date.now()) {
             Report.failure('Please, choose a date in the future');
         } else {
             Report.success('Congratulation! Click on start!');
-        // startButton.disabled = false;
+         startButton.disabled = false;
             const setTimer = () => {
             selectedDate = selectedDate[0].getTime();
             timer.start();
@@ -34,7 +34,8 @@ flatpickr(calendar, {
 });
 
 const timer = {
-  rootSelector: document.querySelector('.timer'),start() {
+    rootSelector: document.querySelector('.timer'),
+    start() {
     intervalId = setInterval(() => {
         startButton.disabled = true;
         calendar.disabled = true;
