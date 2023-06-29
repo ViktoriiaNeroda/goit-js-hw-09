@@ -2,15 +2,16 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Report } from 'notiflix/build/notiflix-report-aio';
 
-let selectedDate = null;
+let userDate = null;
 let currentDate = null;
 let intervalId = null;
 
 const calendar = document.querySelector('#datetime-picker');
 const startButton = document.querySelector('[data-start]');
 startButton.disabled = true;
-// const timer = document.querySelector('.timer')
+
 const TIMER_DELAY = 1000;
+  startButton.addEventListener('click', setTimer);
 
 flatpickr(calendar, {
     enableTime: true,
@@ -22,13 +23,9 @@ flatpickr(calendar, {
             Report.failure('Please, choose a date in the future');
         } else {
             Report.success('Congratulation! Click on start!');
-         startButton.disabled = false;
-            const setTimer = () => {
-            selectedDate = selectedDate[0].getTime();
-            timer.start();
-            }
-        
-            startButton.addEventListener('click', setTimer);
+            startButton.disabled = false;
+            
+            userDate = selectedDate[0].getTime();
         }
     },
 });
@@ -40,9 +37,9 @@ const timer = {
         startButton.disabled = true;
         calendar.disabled = true;
         currentDate = Date.now();
-        const delta = selectedDate - currentDate;
+        const delta = userDate - currentDate;
 
-        if (delta <= 0) {
+        if (delta < 0) {
             this.stop();
             Report.info(
                 'Congratulation! Timer stopped!',
@@ -89,3 +86,7 @@ const timer = {
     return String(value).padStart(2, 0);
   },
 };
+
+function setTimer(event) {
+    timer.start();
+}
